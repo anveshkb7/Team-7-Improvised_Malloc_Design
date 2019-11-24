@@ -28,7 +28,7 @@ int currentFreeSpace;
 
 void *ptr=NULL;
 
-int Mem_init( int regionSize)
+int Mem_Init( int regionSize)
 {
     if(regionSize<=0)
     {	
@@ -45,7 +45,7 @@ int Mem_init( int regionSize)
     if (fd < 0)
         return -1;
          
-    ptr = mmap(NULL, sizeof(blockInfo)*regionSize, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0); 		
+    ptr = mmap(NULL, (sizeof(blockInfo) + 1)*regionSize, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0); 		
     
     if (ptr == MAP_FAILED) 
     { 
@@ -55,7 +55,7 @@ int Mem_init( int regionSize)
     
     currentFreeSpace = regionSize;
     
-    freeListHead = (blockInfo*)(ptr + sizeof(blockInfo)*regionSize - sizeof(blockInfo));
+    freeListHead = (blockInfo*)(ptr + (sizeof(blockInfo) + 1 )*regionSize - sizeof(blockInfo));
     allocatedListHead = (blockInfo*)(ptr + regionSize);
    
     allocatedListHead->size = 0;
@@ -70,7 +70,7 @@ int Mem_init( int regionSize)
     return 1; 
 }
 
-void *Mem_alloc( int spaceAlloc)
+void *Mem_Alloc( int spaceAlloc)
 {
     if( spaceAlloc > currentFreeSpace)
     {
@@ -78,7 +78,7 @@ void *Mem_alloc( int spaceAlloc)
         return NULL;
     }
 
-    blockInfo *bestFreeNode = NULL;
+    blockInfo *bestFreeNode = freeListHead;
     blockInfo *currentNode = freeListHead;
 
     // finding free block for Best Fit Policy
@@ -90,6 +90,7 @@ void *Mem_alloc( int spaceAlloc)
         currentNode--;
     }
 
+    //cout << bestFreeNode->startAdress << "\n"; 
     if( bestFreeNode != NULL)
     {
         void *ptr = bestFreeNode->startAdress;
@@ -154,4 +155,19 @@ void *Mem_alloc( int spaceAlloc)
         perror("Not Enough Memory!\n");
         return NULL;
     }
+}
+
+int main()
+{
+    if( Mem_Init(100) == -1)
+    {
+        perror("Not Initialized");
+    }
+    char *p = (char *)Mem_Alloc(3);
+    if(ptr == NULL)
+    {
+        cout<<"Memory Not Available\n";
+
+    }
+    return 0;
 }

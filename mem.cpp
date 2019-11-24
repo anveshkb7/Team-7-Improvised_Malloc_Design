@@ -78,15 +78,20 @@ void *Mem_Alloc( int spaceAlloc)
         return NULL;
     }
 
-    blockInfo *bestFreeNode = freeListHead;
+    blockInfo *bestFreeNode = NULL;
     blockInfo *currentNode = freeListHead;
 
     // finding free block for Best Fit Policy
     for( int i = 0; i < freeBlocks; i++)
     {
-        if( (currentNode->size < bestFreeNode->size) && (currentNode->size >= spaceAlloc))
+        if( bestFreeNode == NULL && (currentNode->size >= spaceAlloc))
+        {
             bestFreeNode = currentNode;
-
+        }
+        else if( (currentNode->size < bestFreeNode->size) && (currentNode->size >= spaceAlloc))
+        {
+            bestFreeNode = currentNode;
+        }
         currentNode--;
     }
 

@@ -1,7 +1,8 @@
-Improvised Malloc Design
+# Improvised Malloc Design
 
 # Implement a memory allocator for the heap of a user-level process
-# Malloc - functions similar to traditional malloc, but free can free memory from any point in the allocated memory
+
+Malloc - functions similar to traditional malloc, but free can free memory from any point in the allocated memory
 
 Implementations of Mem_Alloc (int size) and Mem_Free (void *ptr) are identical, except the pointer passed to Mem_Free does not have to have been previously returned by Mem_Alloc;
 instead, ptr can point to any valid range of memory returned by Mem_Alloc.
